@@ -45,7 +45,8 @@ $(ARTIFACT_DIR):
 	mkdir -p $(@)
 
 $(ARTIFACT_DIR)/$(WORKFLOW_BINARY): $(addprefix $(BUILD_DIR)/,$(WORKFLOW_CONTENTS)) |$(ARTIFACT_DIR)
-	rm -f $@
+	-rm $@
+	test ! -e $@
 	$(ZIP) $(ZIP_ARGS) $@ $(^)
 
 .PHONY: build
@@ -61,7 +62,7 @@ $(BUILD_DIR)/info.plist: info.plist workflow-readme |$(BUILD_DIR)
 	| $(XMLLINT) $(XMLLINT_ARGS) $@ -
 
 $(BUILD_DIR)/%: % |$(BUILD_DIR)
-	cp -f $< $@
+	cp -a $< $@
 
 .PHONY: checksum
 checksum: md5 sha1 sha256 sha512
@@ -92,5 +93,5 @@ sign: $(addsuffix .asc,$(addprefix $(ARTIFACT_DIR)/,$(ARTIFACT_FILES)))
 
 .PHONY: clean
 clean:
-	rm -rf "$(BUILD_DIR)"
-	rm -rf "$(ARTIFACT_DIR)"
+	-rm -r "$(BUILD_DIR)"
+	-rm -r "$(ARTIFACT_DIR)"
