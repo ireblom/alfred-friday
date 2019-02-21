@@ -1,9 +1,12 @@
 ALFRED_APP=/Applications/Alfred\ 3.app
+GITVERSION=gitversion
+GITVERSION_ARGS=
 GNU_SED=gsed
 GPG=gpg
 GPG_ARGS=--armor --detach-sign
 MD5=md5
 MD5_ARGS=-r
+PYTHON=/usr/bin/python
 SHA=shasum
 SHA_ARGS=-a
 XMLLINT=xmllint
@@ -15,8 +18,13 @@ BUILD_DIR=./out
 ARTIFACT_DIR=./artifacts
 
 WORKFLOW_NAME=alfred-friday
-WORKFLOW_VERSION=$(shell cat version)
-WORKFLOW_NAME_AND_VERSION=$(WORKFLOW_NAME)-v$(WORKFLOW_VERSION)
+ifeq ($(strip $(GITVERSION)),)
+	WORKFLOW_VERSION=?
+	WORKFLOW_NAME_AND_VERSION=$(WORKFLOW_NAME)
+else
+	WORKFLOW_VERSION=$(shell $(GITVERSION) $(GITVERSION_ARGS) | $(PYTHON) $(PYTHON_ARGS)-c "import sys, json; print json.load(sys.stdin)['SemVer']")
+	WORKFLOW_NAME_AND_VERSION=$(WORKFLOW_NAME)-v$(WORKFLOW_VERSION)
+endif
 WORKFLOW_CONTENTS=info.plist icon.png LICENSE
 WORKFLOW_BINARY=$(WORKFLOW_NAME_AND_VERSION).alfredworkflow
 
@@ -48,7 +56,7 @@ build: $(addprefix $(BUILD_DIR)/,$(WORKFLOW_CONTENTS))
 $(BUILD_DIR):
 	mkdir -p $(@)
 
-$(BUILD_DIR)/info.plist: info.plist workflow-readme version |$(BUILD_DIR)
+$(BUILD_DIR)/info.plist: info.plist workflow-readme |$(BUILD_DIR)
 	cat $< \
 	| $(GNU_SED) \
 	-e "s/ALFRED_FRIDAY_VERSION/$(WORKFLOW_VERSION)/" \
