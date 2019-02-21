@@ -1,6 +1,5 @@
 GITVERSION=gitversion
 GITVERSION_ARGS=
-GNU_SED=gsed
 GPG=gpg
 GPG_ARGS=--armor --detach-sign
 MD5=md5
@@ -56,12 +55,10 @@ $(BUILD_DIR):
 	mkdir -p $(@)
 
 $(BUILD_DIR)/info.plist: info.plist workflow-readme |$(BUILD_DIR)
-	cat $< \
-	| $(GNU_SED) \
-	-e "s/ALFRED_FRIDAY_VERSION/$(WORKFLOW_VERSION)/" \
-	-e "s/ALFRED_FRIDAY_README/$$(<workflow-readme sed -e 's/[\&/]/\\&/g' -e 's/$$/\\n/g' | tr -d '\n')/" \
-	| $(XMLLINT) \
-	$(XMLLINT_ARGS) $@ -
+	$(PYTHON) $(PYTHON_ARGS) -c "print open('info.plist','r').read()\
+		.replace('ALFRED_FRIDAY_README',open('workflow-readme','r').read())\
+		.replace('ALFRED_FRIDAY_VERSION','$(WORKFLOW_VERSION)')"\
+	| $(XMLLINT) $(XMLLINT_ARGS) $@ -
 
 $(BUILD_DIR)/%: % |$(BUILD_DIR)
 	cp -f $< $@
