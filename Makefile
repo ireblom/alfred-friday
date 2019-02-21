@@ -1,4 +1,3 @@
-ALFRED_APP=/Applications/Alfred\ 3.app
 GITVERSION=gitversion
 GITVERSION_ARGS=
 GNU_SED=gsed
@@ -35,7 +34,7 @@ all: install
 
 .PHONY: install
 install: workflow
-	open $(ALFRED_APP) $(ARTIFACT_DIR)/$(WORKFLOW_BINARY)
+	open $(ARTIFACT_DIR)/$(WORKFLOW_BINARY)
 
 .PHONY: dist
 dist: workflow checksum sign
