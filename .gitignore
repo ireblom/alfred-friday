@@ -1,0 +1,18 @@
+# Ignore artifacts and other generated files
+artifacts/
+out/
+
+#
+# NB! This file only ignores files related to this repository.
+#     For annoying files related to your operating system, editor of choice,
+#     etc., consider using a global .gitignore
+#
+# For a Mac OS environment:
+#   git config --global core.excludesfile ~/.gitignore
+#
+# A good starting point would be:
+#   https://raw.githubusercontent.com/github/gitignore/master/Global/macOS.gitignore
+#
+# ...then look up your editor of choice and other tools:
+#   https://github.com/github/gitignore/tree/master/Global
+#
