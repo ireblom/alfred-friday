@@ -21,7 +21,7 @@ ifeq ($(strip $(GITVERSION)),)
 	WORKFLOW_VERSION=?
 	WORKFLOW_NAME_AND_VERSION=$(WORKFLOW_NAME)
 else
-	WORKFLOW_VERSION=$(shell $(GITVERSION) $(GITVERSION_ARGS) | $(PYTHON) $(PYTHON_ARGS)-c "import sys, json; print json.load(sys.stdin)['SemVer']")
+	WORKFLOW_VERSION=$(shell $(GITVERSION) $(GITVERSION_ARGS) | $(PYTHON) $(PYTHON_ARGS) -c "import sys, json; print json.load(sys.stdin)['SemVer']")
 	WORKFLOW_NAME_AND_VERSION=$(WORKFLOW_NAME)-v$(WORKFLOW_VERSION)
 endif
 WORKFLOW_CONTENTS=info.plist icon.png LICENSE
